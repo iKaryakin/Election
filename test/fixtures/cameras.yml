@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  camera_number: 
+  link: MyText
+  area: one
+
+two:
+  camera_number: 
+  link: MyText
+  area: two

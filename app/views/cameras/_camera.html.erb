@@ -1,0 +1,20 @@
+<p>
+  <strong >Camera:</strong>
+  <%= camera.camera_number %>
+</p>
+
+<% if false %>
+    <p>
+    <strong>link:</strong>
+    <text>  <%= camera.link %> </text>
+    </p>
+<% end %>
+
+<iframe width="560" height="349" src="<%= camera.link %>"></iframe>
+
+
+<p>
+  <%= link_to 'Destroy Camera', [camera.area, camera],
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+</p>

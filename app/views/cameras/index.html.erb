@@ -1,0 +1,22 @@
+<% @cameras.each do |camera| %>
+    <p>
+    
+    <strong>Участок №<%= "%03d" % camera.area_id %> | </strong>
+    
+    <strong >Камера:
+    <%= camera.camera_number %>
+    </strong>
+    </p>
+
+    <iframe width="460" height="260" src="<%= camera.link %>"></iframe>
+
+<% end %>
+
+
+
+<% if false %>
+    <p>
+    <strong>link:</strong>
+    <text>  <%= camera.link %> </text>
+    </p>
+<% end %>

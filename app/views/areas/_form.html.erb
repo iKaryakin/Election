@@ -1,0 +1,20 @@
+<%= form_with model: @area, local: true do |form| %>
+  <p>
+    <%= form.label :area_code %><br>
+    <%= form.text_field :area_code %>
+  </p>
+ 
+  <p>
+    <%= form.label :address %><br>
+    <%= form.text_area :address %>
+  </p>
+
+   <p>
+    <%= form.label :phone_number %><br>
+    <%= form.text_area :phone_number %>
+  </p>
+ 
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

@@ -1,0 +1,25 @@
+<p>
+  <strong>Код участка:</strong>
+  <%= @area.area_code %>
+</p>
+ 
+<p>
+  <strong>Адрес:</strong>
+  <%= @area.address %>
+</p>
+
+<p>
+  <strong>Номер телефона:</strong>
+  <%= @area.phone_number %>
+</p>
+
+<h2>Cameras</h2>
+<div id="cameras" >
+  <%= render @area.cameras %>
+</div>
+
+<h2>Add a camera:</h2>
+<%= render 'cameras/form' %>
+
+<%= link_to 'Edit', edit_area_path(@area) %> |
+<%= link_to 'Back', areas_path %>

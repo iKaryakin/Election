@@ -1,0 +1,13 @@
+<%= form_with model: [ @area, @area.cameras.build ], remote: true do |form| %>
+  <p>
+    <%= form.label :camera_number %><br>
+    <%= form.text_field :camera_number %>
+  </p>
+  <p>
+    <%= form.label :link %><br>
+    <%= form.text_area :link %>
+  </p>
+  <p>
+    <%= form.submit %>
+  </p>
+<% end %>

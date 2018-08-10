@@ -1,0 +1,36 @@
+<%= link_to 'New area', new_area_path %>
+  <%= form_tag(areas_path, method: :get) do %>
+  <%= text_field_tag :term, params[:term] %>
+  <%= submit_tag 'Search', name: nil %>
+<% end %>
+
+
+
+<table>
+  <% @areas.each do |area| %>
+
+    <tr>
+      <tr>
+        <td><strong>Участок №:
+        <strong><%= area.area_code %></td>
+      </tr>
+      <tr>
+        <td><strong>Адрес:</strong>
+        <%= area.address %></td>
+      </tr>
+      <tr>
+        <td><strong>Номер телефона:</strong>
+        <%= area.phone_number %></td>
+      </tr>
+      <tr>
+        <td><%= link_to 'Show', area_path(area) %>
+        <%= link_to 'Edit',edit_area_path(area) %>
+        <%= link_to 'Destroy', area_path(area),
+                    method: :delete,
+                    data: { confirm: 'Are you sure?' } %> </td>
+      </tr>
+    </tr>
+  <% end %>
+</table>
+
+<%= link_to 'Sign out', destroy_user_session_path, :method => :delete  %>
