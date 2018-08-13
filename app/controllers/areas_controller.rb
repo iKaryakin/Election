@@ -42,7 +42,7 @@ class AreasController < ApplicationController
   end
  
   def destroy
-    @area = Area.Area.find_by!(area_slug: params[:area_slug])
+    @area = Area.find_by!(area_slug: params[:area_slug])
     @area.destroy
  
     redirect_to areas_path

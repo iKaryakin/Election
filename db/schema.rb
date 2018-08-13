@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 2018_08_08_091841) do
 
   create_table "areas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "area_code"
+    t.text "area_code"
     t.text "address"
     t.text "phone_number"
     t.string "area_slug"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 2018_08_08_091841) do
   create_table "cameras", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "camera_number"
     t.text "link"
+    t.text "refer_area_code"
     t.bigint "area_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

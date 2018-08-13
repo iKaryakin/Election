@@ -1,22 +1,22 @@
-<% @cameras.each do |camera| %>
-    <p>
-    
-    <strong>Участок №<%= "%03d" % camera.area_id %> | </strong>
-    
-    <strong >Камера:
-    <%= camera.camera_number %>
-    </strong>
-    </p>
+<% if user_signed_in? %>
+    <% @cameras.each do |camera| %>
+        <p>
+        <strong>Участок <%=
+        if camera.refer_area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
+            "№" + "%03d" % camera.refer_area_code
+        else
+            camera.refer_area_code
+        end %> | </strong>
 
-    <iframe width="460" height="260" src="<%= camera.link %>"></iframe>
+        <strong >Камера:
+        <%= camera.camera_number %>
+        </strong>
+        </p>
 
-<% end %>
+        <iframe width="460" height="260" src="<%= camera.link %>"></iframe>
 
+    <% end %>
+<% else %>
+<h1>Sign in to see this page</h4>
 
-
-<% if false %>
-    <p>
-    <strong>link:</strong>
-    <text>  <%= camera.link %> </text>
-    </p>
 <% end %>
