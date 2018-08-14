@@ -1,13 +1,12 @@
 class Area < ApplicationRecord
-    # self.primary_key = "area_slug"
-
     def to_param
         area_slug
     end
-
-     before_validation(on: :create) do
-        self.area_slug = ["area", area_code].join("-")
-      end
+    
+    require 'russian'
+    before_validation(on: :create) do
+        self.area_slug = ["area", Russian.translit(area_code).parameterize].join("-")
+    end
 
     has_many :cameras, dependent: :destroy
     validates :area_code, uniqueness: true
