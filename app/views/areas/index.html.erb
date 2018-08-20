@@ -1,9 +1,32 @@
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Примеры. Размещение карты на странице.</title>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+</head>
+
+<% if false %>
+
 <%= link_to 'New area', new_area_path %>
   <%= form_tag(areas_path, method: :get) do %>
   <%= text_field_tag :term, params[:term] %>
   <%= submit_tag 'Search', name: nil %>
 <% end %>
 
+              <% @areas.each do |area| %>
+                var Geocoded = [];
+                var myGeocoder = ymaps.geocode(<% area.address.html_safe %>);
+                myGeocoder.then(
+                  function (res) {
+                      alert('Координаты объекта :' + res.geoObjects.get(0).geometry.getCoordinates());
+                      
+                  },
+                  function (err) {
+                      alert('Ошибка');
+                  }
+                );
+                Geocoded.push(myGeocoder);
+                console.log(Geocoded);
+              <% end %>
 
 
 <table>
@@ -39,3 +62,171 @@
 </table>
 
 <%= link_to 'Sign out', destroy_user_session_path, :method => :delete  %>
+
+<% end %>
+
+
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-12">
+      <h4 class="mt-3 font-italic font-weight-bold text-info"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
+      <h4 class="pb-2 mb-3 font-italic font-weight-bold text-danger border-bottom"> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+      <div id="map" style="width: 90%; height: 100%;"> 
+
+        <script>
+          var myMap;
+          var Geocoded = [];
+          // сначала вводим данные, потом преобразуем, потом сохраняем преобразованные в эррей, потом 
+          // сохраняем в ксв
+          
+          ymaps.ready(init);
+          
+
+          function init () {
+              // Создание экземпляра карты и его привязка к контейнеру с
+              // заданным id ("map").
+
+              
+            var myGeocoder;
+              
+
+              myMap = new ymaps.Map('map', {
+                  center: [52.971238, 36.064962], // Orel
+                  zoom: 11
+              }, {
+                  searchControlProvider: 'yandex#search'
+              });
+
+              // Добавление геокода
+              var areas_json = <%= @areas_json.html_safe %>;
+              // for (var i = 0; i < areas_json.length; i+= 1) {
+
+            // ------------------ITS WORKING---------------------
+            // async function f() {
+            //   for (var i = 0; i < areas_json.length; i+= 1) {
+            //   let promise = new Promise((resolve, reject) => {
+            //     setTimeout(() => resolve(ymaps.geocode(areas_json[i].address)), 100)
+            //   });
+
+            //   // myGeocoder = ymaps.geocode(areas_json[0].address);
+
+            //   let result = await promise; // wait till the promise resolves (*)
+            //   Geocoded.push(result.geoObjects.get(0).geometry.getCoordinates())
+            //   console.log('The result value:', result)
+            //   console.log('Geocoded value in function:', Geocoded);
+            //   }
+            //   // alert(result); // "done!"
+            // }
+            // function filter(callback) {
+            //     return callback();
+            //   }
+
+            // // f();
+            // filter(f)
+            // console.log(Geocoded);
+            // -------------------ITS WORKING-----------------------
+              
+              
+                //  var myPlacemark = new ymaps.Placemark([52.969975, 36.086304]);
+                // var myPlacemark = new ymaps.Placemark([42.857077, 74.610968]);
+
+
+                // COMMENTED
+                //  for (var i = 0; i < areas_json.length; i+= 1) {
+                // var myPlacemark = new ymaps.Placemark([areas_json[i].latitude, areas_json[i].longitude]);
+                // console.log(myPlacemark);
+
+                // myMap.geoObjects
+                //   .add(myPlacemark)
+                // }
+                
+
+                var myGeoObjects = [];
+
+                for (var i = 0; i < areas_json.length; i+= 1) {
+                  myGeoObjects[i] = new ymaps.GeoObject({
+                    geometry: {
+                      type: "Point",
+                      coordinates: [areas_json[i].latitude, areas_json[i].longitude]
+                    }
+                  });
+                }
+
+                var myClusterer = new ymaps.Clusterer();
+                myClusterer.add(myGeoObjects);
+                myMap.geoObjects.add(myClusterer);
+                
+            }
+            // console.log("After init", Geocoded);
+
+            function download_csv() {
+                var csv = 'address,geocode\n';
+                Geocoded.forEach(function(row) {
+                        csv += row.join(',');
+                        csv += "\n";
+                });
+                link = document.createElement('a');
+                link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURI(csv));
+                link.setAttribute('download', "uik.csv");
+                link.click();
+                console.log(csv);
+          }
+
+        </script>
+      <a href='#' 
+              onclick='download_csv();'
+          >Download CSV</a>
+      </div>
+    </div>
+
+		<div class="col-md-6">
+        <%= form_tag(areas_path, method: :get) do %> 
+        <%= text_field_tag :term, params[:term], class: "form-control"%>
+        <%= button_tag  name: nil, class: "btn btn-default invisible", type: "submit" %>
+      <% end %>
+
+      <div class="anyClass" style="height: 410px; overflow-y: scroll;">
+        <table>
+          <% @areas.each do |area| %>
+            <tr>
+              <tr>
+                <td><strong>Участок
+                <strong><%= 
+                if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
+                    "№" + "%03d" % area.area_code
+                else
+                    area.area_code
+                end %></td>
+              </tr>
+              <tr>
+                <td><strong>Адрес:</strong>
+                <%= area.address %></td>
+              </tr>
+              <tr class="border-bottom">
+                <td class="pb-2"><strong>Номер телефона:</strong>
+                <%= area.phone_number %></td>
+              </tr>
+              <% if false %>
+              <tr>
+                <td><%= link_to 'Show', area_path(area) %>
+                <%= link_to 'Edit',edit_area_path(area) %>
+                <%= link_to 'Destroy', area_path(area),
+                            method: :delete,
+                            data: { confirm: 'Are you sure?' } %> </td>
+              </tr>
+              <% end %>
+            </tr>
+          <% end %>
+        </table>
+      <%= link_to 'Sign out', destroy_user_session_path, :method => :delete  %>
+		</div>
+	</div>
+</div>
+<script>
+
+</script>

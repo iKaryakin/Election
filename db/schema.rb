@@ -15,6 +15,8 @@ ActiveRecord::Schema.define(version: 2018_08_13_123841) do
   create_table "areas", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.text "area_code"
     t.text "address"
+    t.float "latitude"
+    t.float "longitude"
     t.text "phone_number"
     t.string "area_slug"
     t.datetime "created_at", null: false

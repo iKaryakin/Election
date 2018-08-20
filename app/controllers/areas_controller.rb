@@ -7,6 +7,7 @@ class AreasController < ApplicationController
     else
       Area.all
     end
+    @areas_json = @areas.to_json
   end
 
   def show
