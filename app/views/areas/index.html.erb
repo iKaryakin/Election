@@ -5,108 +5,56 @@
 </head>
 
 <% if false %>
-
-<%= link_to 'New area', new_area_path %>
-  <%= form_tag(areas_path, method: :get) do %>
-  <%= text_field_tag :term, params[:term] %>
-  <%= submit_tag 'Search', name: nil %>
+  <%= button_tag  name: nil, class: "invisible", type: "submit" %>
 <% end %>
-
-              <% @areas.each do |area| %>
-                var Geocoded = [];
-                var myGeocoder = ymaps.geocode(<% area.address.html_safe %>);
-                myGeocoder.then(
-                  function (res) {
-                      alert('Координаты объекта :' + res.geoObjects.get(0).geometry.getCoordinates());
-                      
-                  },
-                  function (err) {
-                      alert('Ошибка');
-                  }
-                );
-                Geocoded.push(myGeocoder);
-                console.log(Geocoded);
-              <% end %>
-
-
-<table>
-  <% @areas.each do |area| %>
-
-    <tr>
-      <tr>
-        <td><strong>Участок
-        <strong><%= 
-        if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
-            "№" + "%03d" % area.area_code
-        else
-            area.area_code
-        end %></td>
-      </tr>
-      <tr>
-        <td><strong>Адрес:</strong>
-        <%= area.address %></td>
-      </tr>
-      <tr>
-        <td><strong>Номер телефона:</strong>
-        <%= area.phone_number %></td>
-      </tr>
-      <tr>
-        <td><%= link_to 'Show', area_path(area) %>
-        <%= link_to 'Edit',edit_area_path(area) %>
-        <%= link_to 'Destroy', area_path(area),
-                    method: :delete,
-                    data: { confirm: 'Are you sure?' } %> </td>
-      </tr>
-    </tr>
-  <% end %>
-</table>
-
-<%= link_to 'Sign out', destroy_user_session_path, :method => :delete  %>
-
-<% end %>
-
 
 
 <div class="container-fluid">
+
 	<div class="row">
-		<div class="col-md-12">
-      <h4 class="mt-3 font-italic font-weight-bold text-info"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
-      <h4 class="pb-2 mb-3 font-italic font-weight-bold text-danger border-bottom"> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
+		<div class="col-md-12 col-xs-12 col-12">
+      <h4 class="mt-3 mb-0 font-italic font-weight-bold text-info"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
+      <h4 class="pb-2 mb-3 mt-0 font-italic font-weight-bold text-danger border-bottom"> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
 		</div>
 	</div>
 	<div class="row">
-		<div class="col-md-6">
-      <div id="map" style="width: 90%; height: 100%;"> 
-
+		<div class="col-md-6 col-xs-12">
+      <div id="map" style="width: 98%; height: 100%;"> 
         <script>
           var myMap;
-          var Geocoded = [];
-          // сначала вводим данные, потом преобразуем, потом сохраняем преобразованные в эррей, потом 
-          // сохраняем в ксв
+          // var Geocoded = [];
           
           ymaps.ready(init);
-          
 
           function init () {
               // Создание экземпляра карты и его привязка к контейнеру с
               // заданным id ("map").
 
+            // var myGeocoder;
               
-            var myGeocoder;
-              
+            myMap = new ymaps.Map('map', {
+                center: [52.971238, 36.064962], // Orel
+                zoom: 11
+            }, {
+                searchControlProvider: 'yandex#search'
+            });
+            var interface = ["zoomControl",
+                            "geolocationControl",
+                            "searchControl",
+                            "routeButton",
+                            "trafficControl",
+                            "typeSelector",
+                            "fullscreenControl",
+                            "rulerControl"
+                            ];
+            for (var j = 0; j < interface.length; j++) {
+              myMap.controls.remove(interface[j]);
+            }
 
-              myMap = new ymaps.Map('map', {
-                  center: [52.971238, 36.064962], // Orel
-                  zoom: 11
-              }, {
-                  searchControlProvider: 'yandex#search'
-              });
+            // Добавление геокода
+            var areas_json = <%= @areas_json.html_safe %>;
 
-              // Добавление геокода
-              var areas_json = <%= @areas_json.html_safe %>;
-              // for (var i = 0; i < areas_json.length; i+= 1) {
-
-            // ------------------ITS WORKING---------------------
+            // ------------------ГЕОКОДИНГ---------------------
             // async function f() {
             //   for (var i = 0; i < areas_json.length; i+= 1) {
             //   let promise = new Promise((resolve, reject) => {
@@ -129,104 +77,66 @@
             // // f();
             // filter(f)
             // console.log(Geocoded);
-            // -------------------ITS WORKING-----------------------
-              
-              
-                //  var myPlacemark = new ymaps.Placemark([52.969975, 36.086304]);
-                // var myPlacemark = new ymaps.Placemark([42.857077, 74.610968]);
-
-
-                // COMMENTED
-                //  for (var i = 0; i < areas_json.length; i+= 1) {
-                // var myPlacemark = new ymaps.Placemark([areas_json[i].latitude, areas_json[i].longitude]);
-                // console.log(myPlacemark);
-
-                // myMap.geoObjects
-                //   .add(myPlacemark)
-                // }
-                
-
-                var myGeoObjects = [];
-
-                for (var i = 0; i < areas_json.length; i+= 1) {
-                  myGeoObjects[i] = new ymaps.GeoObject({
-                    geometry: {
-                      type: "Point",
-                      coordinates: [areas_json[i].latitude, areas_json[i].longitude]
-                    }
-                  });
+            // -------------------ГЕОКОДИНГ----------------------
+            var myGeoObjects = [];
+            for (let i = 0; i < areas_json.length; i++) {
+              myGeoObjects[i] = new ymaps.GeoObject({
+                geometry: {
+                  type: "Point",
+                  coordinates: [areas_json[i].latitude, areas_json[i].longitude]
+                },
+                 properties: {
+                  // clusterCaption: 'Geo object # '+(i+1),
+                  clusterCaption: 'Участок  '+ areas_json[i].area_code,
+                  balloonContentBody: 'Адрес:  '+ areas_json[i].address +
+                   "\n Номер телефона: " + areas_json[i].phone_number
                 }
+              });
 
-                var myClusterer = new ymaps.Clusterer();
-                myClusterer.add(myGeoObjects);
-                myMap.geoObjects.add(myClusterer);
-                
+              myGeoObjects[i].events.add('click', function (e) {
+                e.preventDefault();
+
+                var myElement = document.getElementById(areas_json[i].area_slug);
+                var topPos = myElement.offsetTop;
+                document.getElementById('scrollDiv').scrollTop = topPos;
+                // myElement.style.border = '2px solid red';
+                // $("#" + areas_json[i].area_slug).toggleClass("box2");
+                // myElement.classList.toggle("box2");
+              });
             }
-            // console.log("After init", Geocoded);
-
-            function download_csv() {
-                var csv = 'address,geocode\n';
-                Geocoded.forEach(function(row) {
-                        csv += row.join(',');
-                        csv += "\n";
-                });
-                link = document.createElement('a');
-                link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURI(csv));
-                link.setAttribute('download', "uik.csv");
-                link.click();
-                console.log(csv);
-          }
-
+            var myClusterer = new ymaps.Clusterer();
+            myClusterer.add(myGeoObjects);
+            myMap.geoObjects.add(myClusterer);
+            }
         </script>
-      <a href='#' 
-              onclick='download_csv();'
-          >Download CSV</a>
       </div>
     </div>
 
-		<div class="col-md-6">
-        <%= form_tag(areas_path, method: :get) do %> 
-        <%= text_field_tag :term, params[:term], class: "form-control"%>
-        <%= button_tag  name: nil, class: "btn btn-default invisible", type: "submit" %>
+		<div class="col-md-6 col-xs-12">
+      <%= form_tag(areas_path, method: :get) do %> 
+        <%= text_field_tag :term, params[:term], class: "form-control mb-1", placeholder: "Поиск избирательных участков"%>
       <% end %>
 
-      <div class="anyClass" style="height: 410px; overflow-y: scroll;">
-        <table>
-          <% @areas.each do |area| %>
-            <tr>
-              <tr>
-                <td><strong>Участок
-                <strong><%= 
-                if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
+      <div class="scrollDiv" style="position:relative; height: 410px; overflow-y: scroll;" id="scrollDiv">
+      <% @areas.each do |area| %>
+
+        <div class="box" id="<%= area.area_slug %>">
+          <div class="content border-bottom">
+            <p class="mb-0"><strong> Участок </strong>
+            <%= if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
                     "№" + "%03d" % area.area_code
                 else
                     area.area_code
-                end %></td>
-              </tr>
-              <tr>
-                <td><strong>Адрес:</strong>
-                <%= area.address %></td>
-              </tr>
-              <tr class="border-bottom">
-                <td class="pb-2"><strong>Номер телефона:</strong>
-                <%= area.phone_number %></td>
-              </tr>
-              <% if false %>
-              <tr>
-                <td><%= link_to 'Show', area_path(area) %>
-                <%= link_to 'Edit',edit_area_path(area) %>
-                <%= link_to 'Destroy', area_path(area),
-                            method: :delete,
-                            data: { confirm: 'Are you sure?' } %> </td>
-              </tr>
-              <% end %>
-            </tr>
-          <% end %>
-        </table>
+                end %></p>
+            <p class="mb-1"><strong>Адрес:</strong>
+                    <%= area.address %></p>
+            <p class="mb-1"><strong>Номер телефона:</strong>
+                  <%= area.phone_number %></p>
+            <p class="mb-0 mt-0"><a class="divLink" href="<%= area_path(area) %>"></a></p>
+          </div>
+        </div>
+      <% end %>
       <%= link_to 'Sign out', destroy_user_session_path, :method => :delete  %>
 		</div>
 	</div>
 </div>
-<script>
-
-</script>

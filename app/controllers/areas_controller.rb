@@ -3,7 +3,7 @@ class AreasController < ApplicationController
   def index
     # @areas = Area.all
     @areas = if params[:term]
-      Area.where('area_code LIKE ?', "%#{params[:term]}%")
+      Area.where('address LIKE ?', "%#{params[:term]}%")
     else
       Area.all
     end
