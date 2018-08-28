@@ -2,8 +2,9 @@
 
 /usr/local/bin/wait-for-it.sh db:3306 -t 90 --
 
-if [ -f /tmp/pids/server.pid ]; then
-  rm /tmp/pids/server.pid
+if [ -f /app/tmp/pids/server.pid ]; then
+  echo "== Remove server.pid =="
+  rm /app/tmp/pids/server.pid
 fi
 
 bundle exec rake db:migrate

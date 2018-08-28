@@ -17,6 +17,7 @@ gem 'uglifier', '>= 1.3.0'
 # gem 'mini_racer', platforms: :ruby
 gem 'jquery-rails'
 gem 'bootstrap', '~> 4.1.3'
+gem "font-awesome-rails"
 gem 'russian', '~> 0.6.0'
 gem 'devise'
 
