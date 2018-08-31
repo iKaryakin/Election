@@ -1,7 +1,9 @@
-<p>
-  <strong >Camera:</strong>
-  <%= camera.camera_number %>
-</p>
+<% if false %>
+  <p>
+    <strong >Camera:</strong>
+    <%= camera.camera_number %>
+  </p>
+<% end %>
 
 <% if false %>
     <p>
@@ -10,11 +12,12 @@
     </p>
 <% end %>
 
-<iframe width="560" height="349" src="<%= camera.link %>"></iframe>
+<iframe width="400" height="220" src="<%= camera.link %>"></iframe>
 
-
-<p>
-  <%= link_to 'Destroy Camera', [camera.area, camera],
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %>
-</p>
+<% if false %>
+  <p>
+    <%= link_to 'Destroy Camera', [camera.area, camera],
+                method: :delete,
+                data: { confirm: 'Are you sure?' } %>
+  </p>
+<% end %>

@@ -1,23 +1,24 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <%= stylesheet_link_tag 'area', media: 'all', 'data-turbolinks-track': 'reload' %>
+
     <title>Примеры. Размещение карты на странице.</title>
     <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
 </head>
 
-<% if false %>
-  <%= button_tag  name: nil, class: "invisible", type: "submit" %>
-<% end %>
-
 <body>
   <div class="container-fluid">
 
-    <div class="row">
-      <div class="col-md-12 col-xs-12 col-12">
-        <h4 class="mt-3 mb-0 font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
-        <h4 class="pb-2 mb-3 mt-0 font-italic font-weight-bold red-header border-bottom"> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
+     <%-# Тайтл -%>
+    <div class="row border-bottom title-row">
+      <div class="col-md-12 col-xs-12 col-12 title-div">
+        <h4 class="font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
+        <h4 class="font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
       </div>
     </div>
-    <div class="row">
+
+     <%-# Карта -%>
+    <div class="row mainframe">
       <div class="col-md-6 col-xs-12">
         <div class="map" id="map"> 
           <script>
@@ -34,10 +35,11 @@
                 
               myMap = new ymaps.Map('map', {
                   center: [52.971238, 36.064962], // Orel
-                  zoom: 11
+                  zoom: 12
               }, {
                   searchControlProvider: 'yandex#search'
               });
+              // Удаление интерфейса карты
               var interface = ["zoomControl",
                               "geolocationControl",
                               "searchControl",
@@ -78,7 +80,10 @@
               // filter(f)
               // console.log(Geocoded);
               // -------------------ГЕОКОДИНГ----------------------
+
+              // Создание
               var myGeoObjects = [];
+              var oldElement
               for (let i = 0; i < areas_json.length; i++) {
                 myGeoObjects[i] = new ymaps.GeoObject({
                   geometry: {
@@ -97,10 +102,16 @@
 
                   var myElement = document.getElementById(areas_json[i].area_slug);
                   var topPos = myElement.offsetTop;
-                  document.getElementById('scrollDiv').scrollTop = topPos;
-                  // myElement.style.border = '2px solid red';
-                  // $("#" + areas_json[i].area_slug).toggleClass("box2");
-                  // myElement.classList.toggle("box2");
+                  // document.getElementById('scrollDiv').scrollTop = topPos;
+                  document.getElementById('scrollDiv').scroll({ 
+                    top: topPos - 2,
+                    behavior: 'smooth'
+                  })
+                  myElement.children[0].classList.add('outline_chosen');
+                  if ((oldElement !== undefined) && (oldElement !== myElement)) {
+                    oldElement.children[0].classList.remove('outline_chosen')
+                    }
+                  oldElement = myElement;
                 });
               }
               var myClusterer = new ymaps.Clusterer();
@@ -111,24 +122,22 @@
         </div>
       </div>
 
-      <div class="col-md-6 col-xs-12">
-      <div class="restrict">
-      
+       <%-# Поиск -%>
+      <div class="col-md-6 col-xs-12 pl-1">
         <div class="form-group has-search">
           <%= form_tag(areas_path, method: :get) do %> 
-          <span class="fa fa-search form-control-feedback"></span>
+          <span class="fa fa-search fa-lg form-control-feedback"></span>
             <%= text_field_tag :term, params[:term], class: "form-control mb-1", placeholder: "Поиск избирательных участков"%>
-            
           <% end %>
         </div>
 
+        <%-# Список всех участков -%>
         <div class="scrollDiv scrollbar" id="scrollDiv">
-          <% @areas.each do |area| %>
-
+          <% @areas.reverse_each do |area| %>
             <div class="box" id="<%= area.area_slug %>">
               <div class="content border-bottom">
-                <p class="mb-0"><strong> Участок 
-                <%= if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
+                <p class="mb-1"><strong> Участок 
+                <%= if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #Проверка если числовой
                         "№" + "%03d" % area.area_code
                     else
                         area.area_code
@@ -142,7 +151,6 @@
             </div>
           <% end %>
         </div>
-      </div>
       </div>
     </div>
   </div>

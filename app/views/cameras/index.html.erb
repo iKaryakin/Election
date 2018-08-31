@@ -3,17 +3,17 @@
 </head>
 
 <div class="container-fluid">
-	<div class="row border-bottom title-and-sign_out-div">
-        <div class="col-md-8">
-            <div>
-                <h5 class="mt-3 mb-0 font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h5>
-                <h5 class="pb-0 mb-3 mt-0 font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h5>
-            </div>
+    <%-# Тайтл -%>
+    <div class="row border-bottom title-row">
+      <div class="col-md-8 col-xs-8 col-8 title-div">
+            <h4 class="font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
+            <h4 class="font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
         </div>
         <div class="col-md-4 align-self-center" style="text-align: right;">
-            <%= button_to 'Выйти', destroy_user_session_path, class: "btn btn-sign_out", :method => :delete  %>
+            <%= button_to 'Выйти', destroy_user_session_path, class: "btn btn-sign_in-out", :method => :delete  %>
         </div>
     </div>
+
     <div class="row">
         <% if user_signed_in? %>
             <% @cameras.each do |camera| %>
@@ -34,7 +34,11 @@
                 </div>
             <% end %>
         <% else %>
-            <h1>Sign in to see this page</h4>
+        <div class="col-md-12 authorize">
+            <h2>Авторизуйтесь чтобы увидеть эту страницу</h2>
+            <%= button_to 'Войти', new_user_session_path, class: "btn btn-sign_in-out", :method => :get  %>
+
+        </div>
         <% end %>
     </div>
 </div>
@@ -61,7 +65,7 @@
 
     <% end %>
 <% else %>
-<h1>Sign in to see this page</h4>
+<h1>Авторизуйтесь чтобы увидеть эту страницу</h4>
 
 <% end %>
 

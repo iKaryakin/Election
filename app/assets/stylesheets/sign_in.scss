@@ -36,18 +36,10 @@ body.text-center {}
   padding-bottom: 20px;
 }
 
-// .box {
-  // width: 100%;
-  // max-width: 630px;
-  // padding: 15px;
-  // margin: 0 auto;
-// }
-
 .form-signin {
   // width: 100%;
   // max-width: 630px;
   padding: 7%;
-
   // padding-left: 55px;
   // padding-right: 55px;
   // margin: 0 auto;
@@ -59,18 +51,20 @@ body.text-center {}
 
 .header {
   padding-left: 15%;
-  // padding-right: 20px;
   text-align: start;
 }
 
 .blue-header {
-    color: #1f7de9;
+    color: #0e69d1;
+    margin-top: 1%;
     margin-bottom: 0%;
 }
 
 .red-header {
     color: #ff0000ec;
-    margin-bottom: 6%;
+    margin-top: 0%;
+    margin-bottom: 1%;
+    padding-bottom: 1%;
 }
 
 .link-back {
@@ -101,4 +95,15 @@ body.text-center {}
   cursor: pointer;
   opacity: .9;
   background-color: #1062a5fd;
+}
+
+.alert {
+  position: absolute;
+  color: #dd3232;
+  font-size: 12pt;
+  margin: 0%;
+  // padding-bottom: 0%;
+  // padding-top: 0%;
+  // border-color: #1062a5fd;
+  padding: 0;
 }
