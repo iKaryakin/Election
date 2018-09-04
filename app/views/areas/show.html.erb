@@ -1,167 +1,52 @@
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <%= stylesheet_link_tag 'area', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <title>Размещение карты на странице.</title>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> -->
+    <%= stylesheet_link_tag 'styles', media: 'all'%>
 
-<% if false %>
-  <p>
-    <strong>Код участка:</strong>
-    <%= @area.area_code %>
-  </p>
-  
-  <p>
-    <strong>Адрес:</strong>
-    <%= @area.address %>
-  </p>
+  </head>
+  <body>
+    <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+    </header>
 
-  <p>
-    <strong>Номер телефона:</strong>
-    <%= @area.phone_number %>
-  </p>
+    <div class="hr"></div>
 
-  <h2>Cameras</h2>
-  <div id="cameras" >
-    <%= render @area.cameras %>
-  </div>
+    <main class="main">
+        <div class="main-content">
+            <a class="main-content__back-to-main" href=" /areas ">К списку участников</a>
+            <%= button_to 'Выйти', destroy_user_session_path, class: "btn btn-sign_in-out", :method => :delete  %>
+            <div class="polling-station">
+                <div class="list-polling-station__item list-polling-station__item--hover-disable">
+                    <div class="list-polling-station__text list-polling-station__text--number"><%= @area.area_code %></div>
+                    <div class="list-polling-station__text list-polling-station__text--address"><%= @area.address %></div>
+                    <div class="list-polling-station__text list-polling-station__text--phone"><%= @area.phone_number %></div>
+                </div>
+                <div class="map-cameras-wrapper">
+                    <div id="map" class="map main-content__map main-content__map--polling-station-page"></div>
+                    <div class="cameras">
+                        <div class="cameras__buttons">
+                            <button class="button cameras__button button--active" data-id="0">Камера 1</button>
+                            <button class="button cameras__button" data-id="1">Камера 2</button>
+                        </div>
+                        <div class="cameras__video">
+                        
+                            <img class="cameras__video-item" src="<%= @area.cameras[0].link %>" alt="one">
+                            <img class="cameras__video-item cameras__video-item--hidden" src="<%= @area.cameras[1].link %>" alt="two">
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-  <h2>Add a camera:</h2>
-  <%= render 'cameras/form' %>
-
-  <%= link_to 'Edit', edit_area_path(@area) %> |
-  <%= link_to 'Back', areas_path %>
-<% end %>
-
-<body>
-  <div class="container-fluid">
-
-
-  <%-# Тайтл -%>
-  <div class="row border-bottom title-row">
-    <div class="col-md-8 col-xs-8 col-8 title-div">
-          <h4 class="font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
-          <h4 class="font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
-      </div>
-      <div class="col-md-4 align-self-center" style="text-align: right;">
-          <%= button_to 'Выйти', areas_path, class: "btn btn-sign_in-out", :method => :get  %>
-      </div>
-  </div>
-  <%-# Данные участка -%>
-  <div class="row pb-2">
-    <div class="col-md-12 col-xs-12 col-12 title_row border-bottom">
-      <div class="title_div">
-        <p class="mb-1"><strong> Участок 
-        <%= if @area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #Проверка если числовой
-                "№" + "%03d" % @area.area_code
-            else
-                @area.area_code
-            end %> </strong></p>
-        <p class="mb-1"><i class="fa fa-building fa-lg" aria-hidden="true"> </i>
-                <%= @area.address %></p>
-        <p class="mb-1"><i class="fa fa-phone fa-lg" aria-hidden="true"> </i>
-              <%= @area.phone_number %></p>
-      </div>
-    </div>
-  </div>
-
-    <%-# Карта -%>
-    <div class="row pt-2">
-      <div class="col-md-6 col-xs-12 pl-4">
-        <div class="map" id="map"> 
-          <script>
-            var myMap;
-            ymaps.ready(init);
-            function init () {
-              myMap = new ymaps.Map('map', {
-                  // center: [52.971238, 36.064962], // Orel
-                  center: [<%= @area.latitude %> , <%= @area.longitude %>], // tochka
-
-                  zoom: 16
-              }, {
-                  searchControlProvider: 'yandex#search'
-              });
-                              // Удаление интерфейса карты
-              var interface = ["zoomControl",
-                              "geolocationControl",
-                              "searchControl",
-                              "routeButton",
-                              "trafficControl",
-                              "typeSelector",
-                              "fullscreenControl",
-                              "rulerControl"
-                              ];
-              for (var j = 0; j < interface.length; j++) {
-                myMap.controls.remove(interface[j]);
-              }
-              // Создание
-              var myGeoObjects = [];
-              var oldElement
-                myGeoObjects = new ymaps.GeoObject({
-                  geometry: {
-                    type: "Point",
-                    coordinates: [ <%= @area.latitude %> , <%= @area.longitude %> ]
-                  },
-                });
-              var myClusterer = new ymaps.Clusterer();
-              myClusterer.add(myGeoObjects);
-              myMap.geoObjects.add(myClusterer);
-              }
-          </script>
         </div>
-      </div>
-
-      <%-# Кнопки и камеры -%>
-      <div class="col-md-6 col-xs-12">
-
-        <!-- Tab links -->
-        <div class="tab">
-          <button class="tablinks" onclick="openTab(event, 'camera1')" id="defaultOpen">Камера 1</button>
-          <button class="tablinks" onclick="openTab(event, 'camera2')">Камера 2</button>
-          <button class="tablinks" onclick="openTab(event, 'add')">Добавить</button>
-        </div>
-
-        <!-- Tab content -->
-        <div id="camera1" class="tabcontent">
-          <%= unless @area.cameras[0].nil?
-            render @area.cameras[0]
-          end %>
-        </div>
-
-        <div id="camera2" class="tabcontent">
-          <%= unless @area.cameras[0].nil?
-            render @area.cameras[1]
-          end %>
-        </div>
-
-        <div id="add" class="tabcontent">
-          <%= render 'cameras/form' %>
-        </div>
-
-        <script>
-          document.getElementById("defaultOpen").click();
-
-          function openTab(evt, tabName) {
-            // Declare all variables
-            var i, tabcontent, tablinks;
-
-            // Get all elements with class="tabcontent" and hide them
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-
-            // Get all elements with class="tablinks" and remove the class "active"
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-        }
-        </script>
-    </div>
-  </div>
-</body>
+    </main>
+    
+    <!-- <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script> -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+    <script>electionApp.currentPage = 'polling-station';</script>
+  </body>
+</html>

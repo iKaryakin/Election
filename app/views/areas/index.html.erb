@@ -1,157 +1,41 @@
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <%= stylesheet_link_tag 'area', media: 'all', 'data-turbolinks-track': 'reload' %>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <%# <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> %>
+    <%= stylesheet_link_tag 'perfect-scrollbar', media: 'all'%>
+    <%= stylesheet_link_tag 'styles', media: 'all' %>
+    <%# <link rel="stylesheet" type="text/css" href="./styles.css"> %>
+  </head>
+  <body>
+    <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+        <a href="<%= new_user_session_path %>" class="button button--active header__button">Войти</a>
+    </header>
 
-    <title>Примеры. Размещение карты на странице.</title>
-    <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
-</head>
+    <div class="hr"></div>
 
-<body>
-  <div class="container-fluid">
-
-     <%-# Тайтл -%>
-    <div class="row border-bottom title-row">
-      <div class="col-md-12 col-xs-12 col-12 title-div">
-        <h4 class="font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
-        <h4 class="font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
-      </div>
-    </div>
-
-     <%-# Карта -%>
-    <div class="row mainframe">
-      <div class="col-md-6 col-xs-12">
-        <div class="map" id="map"> 
-          <script>
-            var myMap;
-            // var Geocoded = [];
-            
-            ymaps.ready(init);
-
-            function init () {
-                // Создание экземпляра карты и его привязка к контейнеру с
-                // заданным id ("map").
-
-              // var myGeocoder;
-                
-              myMap = new ymaps.Map('map', {
-                  center: [52.971238, 36.064962], // Orel
-                  zoom: 12
-              }, {
-                  searchControlProvider: 'yandex#search'
-              });
-              // Удаление интерфейса карты
-              var interface = ["zoomControl",
-                              "geolocationControl",
-                              "searchControl",
-                              "routeButton",
-                              "trafficControl",
-                              "typeSelector",
-                              "fullscreenControl",
-                              "rulerControl"
-                              ];
-              for (var j = 0; j < interface.length; j++) {
-                myMap.controls.remove(interface[j]);
-              }
-
-              // Добавление геокода
-              var areas_json = <%= @areas_json.html_safe %>;
-
-              // ------------------ГЕОКОДИНГ---------------------
-              // async function f() {
-              //   for (var i = 0; i < areas_json.length; i+= 1) {
-              //   let promise = new Promise((resolve, reject) => {
-              //     setTimeout(() => resolve(ymaps.geocode(areas_json[i].address)), 100)
-              //   });
-
-              //   // myGeocoder = ymaps.geocode(areas_json[0].address);
-
-              //   let result = await promise; // wait till the promise resolves (*)
-              //   Geocoded.push(result.geoObjects.get(0).geometry.getCoordinates())
-              //   console.log('The result value:', result)
-              //   console.log('Geocoded value in function:', Geocoded);
-              //   }
-              //   // alert(result); // "done!"
-              // }
-              // function filter(callback) {
-              //     return callback();
-              //   }
-
-              // // f();
-              // filter(f)
-              // console.log(Geocoded);
-              // -------------------ГЕОКОДИНГ----------------------
-
-              // Создание
-              var myGeoObjects = [];
-              var oldElement
-              for (let i = 0; i < areas_json.length; i++) {
-                myGeoObjects[i] = new ymaps.GeoObject({
-                  geometry: {
-                    type: "Point",
-                    coordinates: [areas_json[i].latitude, areas_json[i].longitude]
-                  },
-                  properties: {
-                    // clusterCaption: 'Geo object # '+(i+1),
-                    clusterCaption: 'Участок  '+ areas_json[i].area_code,
-                    balloonContentBody: 'Адрес:  '+ areas_json[i].address +
-                    "\n Номер телефона: " + areas_json[i].phone_number <% link_to 'Back', areas_path %>
-                  }
-                });
-                myGeoObjects[i].events.add('click', function (e) {
-                  e.preventDefault();
-
-                  var myElement = document.getElementById(areas_json[i].area_slug);
-                  var topPos = myElement.offsetTop;
-                  // document.getElementById('scrollDiv').scrollTop = topPos;
-                  document.getElementById('scrollDiv').scroll({ 
-                    top: topPos - 2,
-                    behavior: 'smooth'
-                  })
-                  myElement.children[0].classList.add('outline_chosen');
-                  if ((oldElement !== undefined) && (oldElement !== myElement)) {
-                    oldElement.children[0].classList.remove('outline_chosen')
-                    }
-                  oldElement = myElement;
-                });
-              }
-              var myClusterer = new ymaps.Clusterer();
-              myClusterer.add(myGeoObjects);
-              myMap.geoObjects.add(myClusterer);
-              }
-          </script>
-        </div>
-      </div>
-
-       <%-# Поиск -%>
-      <div class="col-md-6 col-xs-12 pl-1">
-        <div class="form-group has-search">
-          <%= form_tag(areas_path, method: :get) do %> 
-          <span class="fa fa-search fa-lg form-control-feedback"></span>
-            <%= text_field_tag :term, params[:term], class: "form-control mb-1", placeholder: "Поиск избирательных участков"%>
-          <% end %>
-        </div>
-
-        <%-# Список всех участков -%>
-        <div class="scrollDiv scrollbar" id="scrollDiv">
-          <% @areas.reverse_each do |area| %>
-            <div class="box" id="<%= area.area_slug %>">
-              <div class="content border-bottom">
-                <p class="mb-1"><strong> Участок 
-                <%= if area.area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #Проверка если числовой
-                        "№" + "%03d" % area.area_code
-                    else
-                        area.area_code
-                    end %> </strong></p>
-                <p class="mb-1"><i class="fa fa-building fa-lg" aria-hidden="true"> </i>
-                        <%= area.address %></p>
-                <p class="mb-1"><i class="fa fa-phone fa-lg" aria-hidden="true"> </i>
-                      <%= area.phone_number %></p>
-                <p class="mb-0 mt-0"><a class="divLink" href="<%= area_path(area) %>"></a></p>
-              </div>
+    <main class="main">
+        <div class="main-content main-content--font-size-0">
+            <div id="map" class="map main-content__map"></div>
+            <div class="polling-station main-content__polling-station">
+                <label class="search polling-station__search">
+                    <input class="search__input" type="text" name="search" placeholder="Поиск избирательных участков">
+                </label>
+                <ul class="polling-station__list list-polling-station"></ul>
             </div>
-          <% end %>
         </div>
-      </div>
-    </div>
-  </div>
-</body>
+    </main>
+    
+    <%# <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script> %>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+    <%# <%= javascript_include_tag "newscripts.js" %> %>
+    <%= javascript_include_tag "perfect-scrollbar.js" %>
+
+    <%# <script type="text/javascript" src="./ascripts.js"></script> %>
+    <script>electionApp.currentPage = 'index';</script>
+  </body>
+</html>

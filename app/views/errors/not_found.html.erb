@@ -1,21 +1,34 @@
-<head>
-  <%= stylesheet_link_tag 'errors', media: 'all', 'data-turbolinks-track': 'reload' %>
-<link href="https://fonts.googleapis.com/css?family=Lato:300" rel="stylesheet">
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> -->
+    
+  </head>
+  <body class="body--background-gray">
+    <!-- <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+    </header>
 
-<body class="text-center">
-  <div class="title">
-    <div class="container d-flex h-100 p-3 mx-auto flex-column">
+    <div class="hr"></div> -->
 
-      <main role="main" class="inner cover">
-        <h1 class="error-404">404</h1>
-        <strong>
-        <p> Что то пошло не так :(</p>
-        <p> Попробуйте обновить страницу, но голосовать все равно нужно.</p> </strong>
-        <p>
-          <a href="#" class="btn btn-md btn-primary">Обновить</a>
-        </p>
-      </main>
-    </div>
-    <div>
-</body>
+    <main class="main">
+        <div class="main-content">
+            <div class="error-code main-content__error-code">404</div>
+            <div class="error-description">
+                <div class="error-description__general-description">Что-то пошло не так :(</div> 
+                <div class="error-description__action-description">Попробуйте обновить страницу, но голосовать все равно нужно.</div>
+            </div>
+            <button class="error-description__btn" onclick="location = '/';">Обновить</button>
+        </div>
+    </main>
+    
+    <!-- <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+    <script type="text/javascript" src="./scripts.js"></script>
+    <script>electionApp.currentPage = 'index';</script> -->
+  </body>
+</html>

@@ -26,6 +26,5 @@ class User < ApplicationRecord
   end
 
   validates :username, presence: :true, uniqueness: { case_sensitive: false }
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, authentication_keys: [:login]
+  devise :database_authenticatable, :rememberable, :trackable, :validatable, authentication_keys: [:login]
 end

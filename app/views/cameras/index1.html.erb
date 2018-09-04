@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> -->
+    <%# <link rel="stylesheet" type="text/css" href="./styles.css"> %>
+    <%= stylesheet_link_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' %>
+    
+    
+  </head>
+  <body>
+    <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+    </header>
+
+    <div class="hr"></div>
+
+    <main class="main">
+        <div class="main-content main-content--font-size-0">
+            <%
+             cameras = @cameras.to_a
+             while !cameras.blank?
+             @cams = cameras.shift(4)
+             %>
+            <ul class="list-cameras">
+                <% @cams.each do |camera| %>
+                <li class="list-cameras__item">
+                    <a href="/areas/area-<%= camera.refer_area_code %>" class="list-cameras__link">  
+                        <div class="list-cameras__video"> <%= image_tag(camera.link) %> </div>
+                        <div class="list-cameras__title">Участок <%=
+                    if camera.refer_area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/
+                        "№" + "%03d" % camera.refer_area_code
+                    else
+                        camera.refer_area_code
+                    end %>
+                    | Камера: <%= camera.camera_number %>
+                    </div>
+                    </a>
+                </li>
+            <% end %>                
+            </ul>
+            <% end %>
+
+            <% if false %>
+            <ul class="pagination">
+                <li class="pagination__item">
+                    <a href="#" class="pagination__link  pagination__link--active">1</a>
+                </li>
+                <li class="pagination__item">
+                    <a href="#" class="pagination__link">2</a>
+                </li>
+            </ul>
+            <% end %>
+            
+        </div>
+        <%= paginate @cameras %>
+    </main>
+    
+    <!-- <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script> -->
+    <!-- <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script> -->
+    <%# <script type="text/javascript" src="/assets/scripts.js"></script> %>
+    <script>electionApp.currentPage = 'list-cameras';</script>
+  </body>
+</html>

@@ -1,18 +1,9 @@
-<% if false %>
-  <p>
-    <strong >Camera:</strong>
-    <%= camera.camera_number %>
-  </p>
+
+<% if false %> <iframe width="400" height="220" src="<%= camera.link %>"></iframe> 
+  <iframe src="<%= camera.link %>"></iframe>
 <% end %>
 
-<% if false %>
-    <p>
-    <strong>link:</strong>
-    <text>  <%= camera.link %> </text>
-    </p>
-<% end %>
-
-<iframe width="400" height="220" src="<%= camera.link %>"></iframe>
+<%= image_tag(camera.link, height: '400', width: '500') %>
 
 <% if false %>
   <p>

@@ -1,8 +1,8 @@
 class CamerasController < ApplicationController
 
     def index
-        @cameras = Camera.all   
-        # @areas = Area.all 
+        @cameras = Camera.all 
+        @cameras2 = Camera.page(params[:page])  
     end
 
     def show

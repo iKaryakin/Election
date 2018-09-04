@@ -7,7 +7,19 @@ class AreasController < ApplicationController
     else
       Area.all
     end
-    @areas_json = @areas.to_json
+    # @areas_json = @areas.to_json
+    @areas_arr = @areas.map do |item|
+      { number: item.area_code,
+        address: item.address,
+        coordinates: JSON.parse( item.coordinates) ,
+        phone: item.phone_number,
+        area_slug: item.area_slug,
+        url: "/areas/" + item.area_slug }
+    end
+    respond_to do |format|
+      format.html
+      format.json { render json: @areas_arr }
+  end  
   end
 
   def show

@@ -13,6 +13,13 @@ Rails.application.config.assets.precompile += %w( sign_in.css )
 Rails.application.config.assets.precompile += %w( errors.css )
 Rails.application.config.assets.precompile += %w( cameras.css )
 
+Rails.application.config.assets.precompile += %w( newscripts.js )
+Rails.application.config.assets.precompile += %w( styles.css )
+Rails.application.config.assets.precompile += %w( perfect-scrollbar.css )
+Rails.application.config.assets.precompile += %w( perfect-scrollbar.js )
+
+
+
 # Precompile additional assets.
 # application.js, application.css, and all non-JS/CSS in the app/assets
 # folder are already added.

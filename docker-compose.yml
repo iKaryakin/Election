@@ -20,8 +20,6 @@ services:
       
   web:
     build: .
-    
-    # entrypoint: ./wait-for-it.sh db:3306 -t 60 --
     entrypoint: ["docker-entrypoint.sh"]
     volumes:
       - .:/app

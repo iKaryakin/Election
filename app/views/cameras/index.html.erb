@@ -1,72 +1,69 @@
-<head>
-  <%= stylesheet_link_tag    'cameras', media: 'all', 'data-turbolinks-track': 'reload' %>
-</head>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> -->
+    <%= stylesheet_link_tag 'styles', media: 'all'%>
 
-<div class="container-fluid">
-    <%-# Тайтл -%>
-    <div class="row border-bottom title-row">
-      <div class="col-md-8 col-xs-8 col-8 title-div">
-            <h4 class="font-italic font-weight-bold blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h4>
-            <h4 class="font-italic font-weight-bold red-header "> ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h4>
-        </div>
-        <div class="col-md-4 align-self-center" style="text-align: right;">
-            <%= button_to 'Выйти', destroy_user_session_path, class: "btn btn-sign_in-out", :method => :delete  %>
-        </div>
-    </div>
+    
+  </head>
+  <body>
+    <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+    </header>
 
-    <div class="row">
-        <% if user_signed_in? %>
-            <% @cameras.each do |camera| %>
-                <div class="col-md-3 col-xs-3 col-3">
-                    
-                    <iframe width=width height=height src="<%= camera.link %>"></iframe>
-                    <p> <strong>Участок <%=
-                    if camera.refer_area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
+    <div class="hr"></div>
+
+    <main class="main">
+        <div class="main-content main-content--font-size-0">
+        <%
+            cameras = @cameras2.to_a
+            while !cameras.blank?
+            @cams = cameras.shift(4)
+            %>
+
+            <ul class="list-cameras">
+                <% @cams.each do |camera| %>
+                <li class="list-cameras__item">
+                     <a href="/areas/area-<%= camera.refer_area_code %>" class="list-cameras__link">  
+                        <div class="list-cameras__video"> <%= image_tag(camera.link) %> </div>
+                        <div class="list-cameras__title">Участок <%=
+                    if camera.refer_area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/
                         "№" + "%03d" % camera.refer_area_code
                     else
                         camera.refer_area_code
-                    end %> | </strong>
-
-                    <strong >Камера:
-                        <%= camera.camera_number %>
-                    </strong>
-                    </p>
-                </div>
+                    end %>
+                    | Камера: <%= camera.camera_number %>
+                    </div>
+                    </a>
+                </li>
+                <% end %>  
+            </ul>
+        
             <% end %>
-        <% else %>
-        <div class="col-md-12 authorize">
-            <h2>Авторизуйтесь чтобы увидеть эту страницу</h2>
-            <%= button_to 'Войти', new_user_session_path, class: "btn btn-sign_in-out", :method => :get  %>
+            <% if false %>
+            <ul class="pagination">
+                <li class="pagination__item">
+                    <a href="#" class="pagination__link  pagination__link--active">1</a>
+                </li>
+                <li class="pagination__item">
+                    <a href="#" class="pagination__link">2</a>
+                </li>
+            </ul>
+            <% end %> ggggg
 
         </div>
-        <% end %>
-    </div>
-</div>
+        <div id="paginator">
+            <%= paginate @cameras2 %>
+        <div>
 
-
-<% if false %>
-
-<% if user_signed_in? %>
-    <% @cameras.each do |camera| %>
-        <p>
-        <strong>Участок <%=
-        if camera.refer_area_code =~ /\A[-+]?[0-9]*\.?[0-9]+\Z/ #check if numeric
-            "№" + "%03d" % camera.refer_area_code
-        else
-            camera.refer_area_code
-        end %> | </strong>
-
-        <strong >Камера:
-        <%= camera.camera_number %>
-        </strong>
-        </p>
-
-        <iframe width="400" height="220" src="<%= camera.link %>"></iframe>
-
-    <% end %>
-<% else %>
-<h1>Авторизуйтесь чтобы увидеть эту страницу</h4>
-
-<% end %>
-
-<% end %>
+    </main>
+    
+    <!-- <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script> -->
+    <!-- <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script> -->
+    <script>electionApp.currentPage = 'list-cameras';</script>
+  </body>
+</html>

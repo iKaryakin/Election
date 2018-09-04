@@ -1,0 +1,92 @@
+<head>
+  <%= stylesheet_link_tag    'sign_in', media: 'all', 'data-turbolinks-track': 'reload' %>
+</head>
+
+<% if false %>
+  <h2>Log in</h2>
+
+  <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+    <div class="field">
+      <%= f.label :login %><br />
+      <%= f.text_field :login, autofocus: true %>
+    </div>
+
+    <div class="field">
+      <%= f.label :password %><br />
+      <%= f.password_field :password, autocomplete: "off" %>
+    </div>
+
+    <% if devise_mapping.rememberable? -%>
+      <div class="field">
+        <%= f.check_box :remember_me %>
+        <%= f.label :remember_me %>
+      </div>
+    <% end -%>
+
+    <div class="actions">
+      <%= f.submit "Log in" %>
+    </div>
+  <% end %>
+  <%= render "devise/shared/links" %>
+<% end %>
+
+
+<body>
+<%= devise_error_messages! %>
+    <div class="title">
+      <div style="text-center">
+        <h5 class="font-italic font-weight-bold header blue-header"> ДОСРОЧНЫЕ ВЫБОРЫ </h5>
+        <h5 class="font-italic font-weight-bold header red-header"> 
+        ГУБЕРНАТОРА ОРЛОВСКОЙ ОБЛАСТИ </h5>
+      </div>
+
+      <div class="form-signin">
+        <h6 class="font-weight-normal" style="text-align: left;"><strong>Авторизация</strong></h6>
+        <p class="mb-5" style="text-align: left;">Только для членов избирательной коммисии</p>
+
+        <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+          <div class="field">
+            <%= f.text_field :login, class: "mb-4 form-control makeItRed",  placeholder: "Логин", autofocus: true %>
+          </div>
+
+          <div class="field">
+            <%= f.password_field :password, class: "form-control makeItRed", placeholder: "Пароль", autocomplete: "off" %>
+          </div>
+
+          <div class="actions">
+            <%= f.submit "Войти", class: "btn btn-md btn-primary btn-block"  %>
+            <%= render 'layouts/messages' %>
+          </div>
+        <% end %>
+
+        
+        <% if false %>
+          <label for="inputLogin" class="sr-only">Email address</label>
+          <input type="email" id="inputLogin" class="form-control" placeholder="Email address" required="" autofocus="">
+          <label for="inputPassword" class="sr-only">Password</label>
+          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="">
+          <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+          <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+        <% end %>
+      </div>
+
+      <p style="text-align: center; margin-top: 30px;">
+          <a href="<%= areas_path(:get) %>" class="link-back"><i class="fa fa-arrow-left mr-1" aria-hidden="true"></i>   
+        На главную</a>
+        <script>
+        // <i class="fa fa-arrow-left mr-1" aria-hidden="true"></i>   
+        // <%= link_to 'На главную', areas_path, class: "link-back", method: :get %>
+        </script>
+        </p>
+        
+    </div>
+    <script>
+    if ((document.getElementsByClassName("alert")[0] !==  undefined) &&
+      (document.getElementsByClassName("alert")[0].innerHTML == "Проверьте правильность заполнение полей и попробуйте снова ")) {
+        var x = document.getElementsByClassName("makeItRed");
+        for (var i = 0; i < x.length; i++) {
+            x[i].setAttribute("style","border-color: #dd3232;");
+        }
+      }
+    </script>
+</body>

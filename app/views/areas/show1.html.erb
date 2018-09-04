@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, world!</title>
+    <!-- <link rel="stylesheet" type="text/css" href="./perfect-scrollbar/perfect-scrollbar.css"> -->
+    <%# <link rel="stylesheet" type="text/css" href="./styles.css"> %>
+    <%= stylesheet_link_tag 'styles', media: 'all', 'data-turbolinks-track': 'reload' %>
+
+  </head>
+  <body>
+    <header class="header">
+        <div class="logo header__logo"></div>
+        <div class="event-date header__event-date"></div>
+    </header>
+
+    <div class="hr"></div>
+
+    <main class="main">
+        <div class="main-content">
+            <a class="main-content__back-to-main" href="<%= '/areas' %>">К списку участников</a>
+            <div class="polling-station">
+                <div class="list-polling-station__item list-polling-station__item--hover-disable">
+                    <div class="list-polling-station__text list-polling-station__text--number"><%= @area.area_code %></div>
+                    <div class="list-polling-station__text list-polling-station__text--address"><%= @area.address %></div>
+                    <div class="list-polling-station__text list-polling-station__text--phone"><%= @area.phone_number %></div>
+                </div>
+                <div class="map-cameras-wrapper">
+                    <div id="map" class="map main-content__map main-content__map--polling-station-page"></div>
+                    <div class="cameras">
+                        <div class="cameras__buttons">
+                            <button class="button cameras__button button--active">Камера 1</button>
+                            <button class="button cameras__button">Камера 2</button>
+                        </div>
+                        <div class="cameras__video"><%= render @area.cameras %></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    
+    <!-- <script type="text/javascript" src="./perfect-scrollbar/perfect-scrollbar.js"></script> -->
+    <script src="https://api-maps.yandex.ru/2.1/?lang=en_US" type="text/javascript"></script>
+    <%# <script type="text/javascript" src="./scripts.js"></script> %>
+
+    <script>electionApp.currentPage = 'polling-station';</script>
+  </body>
+</html>
